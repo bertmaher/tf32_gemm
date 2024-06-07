@@ -157,9 +157,13 @@ def print_once(s):
     print(s)
 
 
-precompiled_kernel = triton.compiler.compile(
-    "scripts/bertrand/tf32_gemm/matmul_kernel.ttgir"
-)
+precompiled_kernel = None
+try:
+    precompiled_kernel = triton.compiler.compile(
+        "matmul_kernel.ttgir"
+    )
+except Exception:
+    pass
 
 
 def matmul(a, b, precompiled=False):
@@ -171,7 +175,7 @@ def matmul(a, b, precompiled=False):
     # Allocates output.
     c = torch.empty((M, N), device=a.device, dtype=torch.float32)
     # 1D launch kernel where each block gets its own program.
-    if precompiled:
+    if precompiled and precompiled_kernel:
         precompiled_kernel[((M // 128) * (N // 256)), 1, 1](
             a, b, c, M, N, K, a.stride(0), b.stride(0), c.stride(0)
         )

@@ -3,7 +3,7 @@
 import torch
 import triton  # @manual
 
-from .triton_kernel import matmul as triton_matmul
+from triton_kernel import matmul as triton_matmul
 
 try:
     torch.ops.load_library("cutlass.so")

@@ -9,7 +9,7 @@ import torch
 from torch.profiler import profile
 from triton.testing import do_bench  # @manual
 
-from .triton_kernel import matmul as triton_matmul
+from triton_kernel import matmul as triton_matmul
 
 
 def main():
